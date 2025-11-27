@@ -1,9 +1,9 @@
 const cacheName = "azure-car-configure-0.1";
 const contentToCache = [
     "Build/webgl.loader.js",
-    "Build/webgl.framework.js.br",
-    "Build/webgl.data.br",
-    "Build/webgl.wasm.br",
+    "Build/webgl.framework.js.gz",
+    "Build/webgl.data.gz",
+    "Build/webgl.wasm.gz",
     "TemplateData/style.css"
 
 ];
