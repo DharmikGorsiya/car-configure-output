@@ -103,12 +103,19 @@
 
 
           loadingBar.style.display = "none";
- 		 	 if (unityInstance) {
-       		  	 var json = JSON.stringify({ exampleKey: "exampleValue" }); // Example JSON data to send
-         		 unityInstance.SendMessage('ScriptManager', 'ReceiveJSON', json);
-     		 	  } else {
-       		 	  console.error("Unity instance not found or not fully loaded.");
-        		}
+ 		 	 if (unityInstance) 
+			 {
+       		  	   window.addEventListener("message", function (event) 
+				   {
+					if (event.data && event.data.type === "FROM_PARENT") 
+					{
+					  const receivedValue = event.data.data;
+					  console.log("Received from parent:", receivedValue);
+					  // Send to Unity
+					  unityInstance.SendMessage('ScriptManager', 'ReceiveCommand', receivedValue);
+					}
+				  });
+			 }
         }).catch((message) => {
           alert(message);
         });
