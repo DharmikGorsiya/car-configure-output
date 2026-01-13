@@ -20,6 +20,35 @@
       <div id="unity-warning"> </div>
     </div>
     <script>
+      function GetMobileDeviceType() {
+        const ua = navigator.userAgent.toLowerCase();
+        const width = Math.min(screen.width, screen.height);
+
+        // iOS
+        if (/iphone/.test(ua)) {
+            return "iPhone";
+        }
+        if (/ipad/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) {
+            return "iPad";
+        }
+
+        // Android
+        if (/android/.test(ua)) {
+            if (width >= 600) {
+                return "AndroidTablet";
+            } else {
+                return "AndroidPhone";
+            }
+        }
+
+        return "Desktop";
+      }
+
+      // Function to be called from Unity to get device type
+      window.GetDeviceTypeForUnity = function() {
+        return GetMobileDeviceType();
+      };
+
       window.addEventListener("load", function () {
         if ("serviceWorker" in navigator) {
           navigator.serviceWorker.register("ServiceWorker.js");
@@ -115,6 +144,11 @@
 					  unityInstance.SendMessage('ScriptManager', 'ReceiveCommand', receivedValue);
 					}
 				  });
+				  
+				  // Detect device type and send to Unity
+				  const deviceType = GetMobileDeviceType();
+				  console.log("Device type detected:", deviceType);
+				  unityInstance.SendMessage('UIManager', 'OnDeviceTypeDetected', deviceType);
 			 }
         }).catch((message) => {
           alert(message);
